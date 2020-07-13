@@ -1,8 +1,6 @@
 .ball {
   background: #FFFFFF;
-  width: 10px;
-  height: 10px;
-  position: relative;
-  top: 45px;
-  left: 10px;
+  width: 100px;
+  height: 100px;
+  display: inline-block;
 }
