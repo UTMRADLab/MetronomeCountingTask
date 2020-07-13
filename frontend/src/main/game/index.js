@@ -1,13 +1,13 @@
 import React, {Component} from 'react';
-
+import './game.css'
+import Anime, {anime} from 'react-anime';
 class Game extends Component {
   render() {
     return(
-      <div>
-        <p>
-          This is the game
-        </p>
-      </div>
+      <Anime scale={[.1, .9]}
+        loop={true}>
+        <div class="ball" />
+      </Anime>
     );
   }
 }
