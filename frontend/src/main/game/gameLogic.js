@@ -1,8 +1,12 @@
+import playNextRoundSound  from './sounds/';
+
 const successTarget = 20;
 const gameCatchTarget = 30;
+const roundDuration = 2000;
 let gameCount = 0;
 let usrCount = 0;
 let roundActive = false;
+let gameInterval;
 
 const success = () => {
   alert("correct!");
@@ -28,10 +32,6 @@ const roundMissed = () => {
   alert("round missed!");
 };
 
-const playNextRoundSound = () => {
-
-};
-
 const nextRound = () => {
   if (usrCount !== gameCount) {
     roundMissed();
@@ -42,6 +42,14 @@ const nextRound = () => {
     playNextRoundSound();
     roundActive = true;
   }
+};
+
+const startGame = () => {
+  gameInterval = setInterval(nextRound, roundDuration);
+};
+
+const stopGame = () => {
+  clearInterval(gameInterval);
 };
 
 const reactPress = () => {
