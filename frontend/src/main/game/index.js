@@ -1,9 +1,18 @@
 import React, {Component} from 'react';
 import './game.css'
 import gameLogic from './gameLogic';
+
+const handleKeyPress = event => {
+  if (event.key === "ArrowUp") console.log("arrow up");
+  if (event.key === "ArrowRight") console.log("arrow right");
+  if (event.key === "ArrowDown") console.log("arrow down");
+};
 class Game extends Component {
+  componentDidMount() {
+    document.addEventListener('keydown', handleKeyPress);
+  }
+
   render() {
-    gameLogic.startGame();
     return(
       <div>
         <p>instructions</p>
