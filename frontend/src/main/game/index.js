@@ -1,5 +1,11 @@
 import React, {Component} from 'react';
 import './game.css'
+import {
+  nextRound,
+  reactPress,
+  confirmDonePress,
+  selfCatchPress
+} from './gameLogic';
 class Game extends Component {
   render() {
     return(

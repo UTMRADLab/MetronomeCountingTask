@@ -1,5 +1,5 @@
 const successTarget = 20;
-const selfCatchTarget = 30;
+const gameCatchTarget = 30;
 let gameCount = 0;
 let usrCount = 0;
 let roundActive = false;
@@ -33,10 +33,15 @@ const playNextRoundSound = () => {
 };
 
 const nextRound = () => {
-  if(usrCount !== gameCount) roundMissed();
-  gameCount++;
-  playNextRoundSound();
-  roundActive = true;
+  if (usrCount !== gameCount) {
+    roundMissed();
+  } else if (gameCount === gameCatchTarget) {
+    gameCatch();
+  } else {
+    gameCount++;
+    playNextRoundSound();
+    roundActive = true;
+  }
 };
 
 const reactPress = () => {
@@ -54,4 +59,17 @@ const confirmDonePress = () => {
   } else if (usrCount > successTarget) {
     overcountMiss();
   }
+};
+
+const selfCatchPress = () => {
+  selfCatch();
+  gameCount = 0;
+  usrCount = 0;
+};
+
+export default {
+ nextRound,
+ reactPress,
+ confirmDonePress,
+ selfCatchPress
 };
