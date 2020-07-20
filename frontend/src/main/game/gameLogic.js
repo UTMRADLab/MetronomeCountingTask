@@ -2,29 +2,33 @@ import playNextRoundSound  from './sounds/';
 
 const successTarget = 20;
 const gameCatchTarget = 30;
-const roundDuration = 2000;
+const roundDuration = 1000;
 let gameCount = 0;
 let usrCount = 0;
 let roundActive = false;
-let gameInterval;
 
 const success = () => {
+  stopGame();
   alert("correct!");
 };
 
 const gameCatch = () => {
+  stopGame();
   alert("went over, caught by game");
 };
 
 const overcountMiss = () => {
+  stopGame();
   alert("overcounting");
 };
 
 const undercountMiss = () => {
+  stopGame();
   alert("undercounting");
 };
 
 const selfCatch = () => {
+  stopGame();
   alert("self caught, the game will now reset");
 };
 
@@ -38,18 +42,19 @@ const nextRound = () => {
   } else if (gameCount === gameCatchTarget) {
     gameCatch();
   } else {
-    gameCount++;
     playNextRoundSound();
+    gameCount++;
     roundActive = true;
+    startGame();
   }
 };
 
 const startGame = () => {
-  gameInterval = setInterval(nextRound, roundDuration);
+  setTimeout(nextRound, roundDuration);
 };
 
 const stopGame = () => {
-  clearInterval(gameInterval);
+
 };
 
 const reactPress = () => {
@@ -75,9 +80,12 @@ const selfCatchPress = () => {
   usrCount = 0;
 };
 
-export default {
- nextRound,
- reactPress,
- confirmDonePress,
- selfCatchPress
+const gameLogic = {
+  startGame,
+  stopGame,
+  reactPress,
+  confirmDonePress,
+  selfCatchPress
 };
+
+export default gameLogic;

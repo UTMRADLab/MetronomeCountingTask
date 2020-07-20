@@ -1,13 +1,9 @@
 import React, {Component} from 'react';
 import './game.css'
-import {
-  nextRound,
-  reactPress,
-  confirmDonePress,
-  selfCatchPress
-} from './gameLogic';
+import gameLogic from './gameLogic';
 class Game extends Component {
   render() {
+    gameLogic.startGame();
     return(
       <div>
         <p>instructions</p>
