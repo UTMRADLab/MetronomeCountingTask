@@ -32,14 +32,8 @@ const selfCatch = () => {
   alert("self caught, the game will now reset");
 };
 
-const roundMissed = () => {
-  alert("round missed!");
-};
-
 const nextRound = () => {
-  if (usrCount !== gameCount) {
-    roundMissed();
-  } else if (gameCount === gameCatchTarget) {
+  if (gameCount === gameCatchTarget) {
     gameCatch();
   } else {
     playNextRoundSound();
