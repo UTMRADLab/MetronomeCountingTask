@@ -53,8 +53,10 @@ class Game extends Component {
     this.clearCounts = this.clearCounts.bind(this);
     this.incGameCount = this.incGameCount.bind(this);
     this.incUsrCount = this.incUsrCount.bind(this);
-  }
 
+    const gameLogicFuncs = gameLogic(this.incGameCount);
+    gameLogicFuncs.startGame();
+  }
 
   componentDidMount() {
     document.addEventListener('keydown', this.handleKeyPress);
