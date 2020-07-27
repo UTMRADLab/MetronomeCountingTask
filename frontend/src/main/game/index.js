@@ -3,18 +3,36 @@ import './game.css'
 import gameLogic from './gameLogic';
 
 class Game extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      gameCount: 0,
+      usrCount: 0
+    }
+    this.clearCounts = this.clearCounts.bind(this);
+    this.incGameCount = this.incGameCount.bind(this);
+    this.incUsrCount = this.incUsrCount.bind(this);
+
+    const nextRoundCallback = this.incGameCount;
+    const reactCallback = this.incUsrCount;
+    const clearCountsCallback = this.clearCounts;
+    this.gameLogicFuncs = gameLogic(nextRoundCallback, reactCallback, clearCountsCallback);
+    this.gameLogicFuncs.startGame();
+  }
+
   confirmDone = () => {
     console.log("arrow up, confirm done");
+    this.gameLogicFuncs.confirmDonePress();
   };
   
   react = () => {
-    console.log("arrow right, react");
-    this.incUsrCount();
+    this.gameLogicFuncs.reactPress();
   };
   
   selfCatch = () => {
     console.log("arrow down, self catch");
     this.clearCounts();
+    this.gameLogicFuncs.selfCatchPress();
   };
 
   clearCounts = () => {
@@ -43,20 +61,6 @@ class Game extends Component {
     if (event.key === "ArrowRight") this.react();
     if (event.key === "ArrowDown") this.selfCatch();
   };
-
-  constructor(props) {
-    super(props);
-    this.state = {
-      gameCount: 0,
-      usrCount: 0
-    }
-    this.clearCounts = this.clearCounts.bind(this);
-    this.incGameCount = this.incGameCount.bind(this);
-    this.incUsrCount = this.incUsrCount.bind(this);
-
-    const gameLogicFuncs = gameLogic(this.incGameCount);
-    gameLogicFuncs.startGame();
-  }
 
   componentDidMount() {
     document.addEventListener('keydown', this.handleKeyPress);

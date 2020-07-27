@@ -1,36 +1,47 @@
 import playNextRoundSound  from './sounds/';
 
-const gameLogic = (nextRoundCallback) => {
+const gameLogic = (nextRoundCallback, reactCallback, clearCountsCallback) => {
   const successTarget = 20;
   const gameCatchTarget = 30;
   const roundDuration = 1000;
   let gameCount = 0;
   let usrCount = 0;
   let roundActive = false;
+  let timeout;
+
+  const clearCounts = () => {
+    gameCount = 0;
+    usrCount = 0;
+  };
 
   const success = () => {
     stopGame();
     alert("correct!");
+    startGame();
   };
   
   const gameCatch = () => {
     stopGame();
     alert("went over, caught by game");
+    startGame();
   };
   
   const overcountMiss = () => {
     stopGame();
     alert("overcounting");
+    startGame();
   };
   
   const undercountMiss = () => {
     stopGame();
     alert("undercounting");
+    startGame();
   };
   
   const selfCatch = () => {
     stopGame();
     alert("self caught, the game will now reset");
+    startGame();
   };
   
   const nextRound = () => {
@@ -46,34 +57,35 @@ const gameLogic = (nextRoundCallback) => {
   };
   
   const startGame = () => {
-    setTimeout(nextRound, roundDuration);
+    timeout = setTimeout(nextRound, roundDuration);
   };
   
   const stopGame = () => {
-    
+    clearInterval(timeout);
+    clearCountsCallback();
+    clearCounts();
   };
   
   const reactPress = () => {
     if(roundActive) {
       usrCount++;
+      reactCallback();
       roundActive = false;
     }
   };
   
   const confirmDonePress = () => {
-    if(gameCount === usrCount === successTarget) {
+    if(gameCount === successTarget) {
       success();
-    } else if (usrCount < successTarget) {
+    } else if (gameCount < successTarget) {
       undercountMiss();
-    } else if (usrCount > successTarget) {
+    } else if (gameCount > successTarget) {
       overcountMiss();
     }
   };
   
   const selfCatchPress = () => {
     selfCatch();
-    gameCount = 0;
-    usrCount = 0;
   };
 
   return {
