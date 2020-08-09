@@ -1,60 +1,107 @@
 import React, {Component} from 'react';
-import './game.css'
-import gameLogic from './gameLogic';
+import './game.css';
+import playRoundSound  from './sounds/';
+
+const SUCCESS_TARGET = 20;
+const GAME_CATCH_TARGET = 30;
+const ROUND_DURATION = 1000;
 
 class Game extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      gameCount: 0,
-      usrCount: 0
-    }
-    this.clearCounts = this.clearCounts.bind(this);
-    this.incGameCount = this.incGameCount.bind(this);
-    this.incUsrCount = this.incUsrCount.bind(this);
+      gameCount: -1,
+      usrCount: 0,
 
-    const nextRoundCallback = this.incGameCount;
-    const reactCallback = this.incUsrCount;
-    const clearCountsCallback = this.clearCounts;
-    this.gameLogicFuncs = gameLogic(nextRoundCallback, reactCallback, clearCountsCallback);
-    this.gameLogicFuncs.startGame();
+      roundActive: false,
+
+      gameStartTime: 0,
+      cycleStartTime: 0,
+      soundTime: 0,
+      userReactTime: 0,
+
+      selfCatchPressed: false,
+      confirmDonePressed: false
+    }
+    this.playRun = this.playRun.bind(this);
+    this.playSound = this.playSound.bind(this);
+    this.startCycle = this.startCycle.bind(this);
+    this.stopCycle = this.stopCycle.bind(this);
+    this.confirmDone = this.confirmDone.bind(this);
+    this.react = this.react.bind(this);
+    this.selfCatch = this.selfCatch.bind(this);
+    this.handleKeyPress = this.handleKeyPress.bind(this);
   }
 
+  playSound = () => {
+    let soundTime = new Date().getTime();
+    this.setState({
+      soundTime: soundTime
+    });
+    playRoundSound();
+  };
+
+  startCycle = () => {
+    // start timers
+    let cycleStartTime = new Date().getTime();
+    this.setState({
+      cycleStartTime: cycleStartTime,
+      roundActive: true
+    });
+    // play sound
+    this.playSound();
+  };
+
+  stopCycle = () => {
+    // stop timers
+    this.setState({
+      roundActive: false
+    });
+    // check for any exit conditions
+    if(this.state.selfCatchPressed) {
+      // self catch
+      console.log("self catch")
+    } else if (this.state.confirmDonePressed) {
+      // confirm done
+      if(this.state.gameCount === SUCCESS_TARGET) {
+        // successful hit
+        console.log("done hit!")
+      } else {
+        // miss
+        console.log("done miss")
+      }
+    } else if (this.state.gameCount === GAME_CATCH_TARGET) {
+      // game catch
+      console.log("game catch");
+    } else {
+      // if no exit conditions, play run again
+      this.playRun();
+    }
+    
+  };
+
   confirmDone = () => {
-    console.log("arrow up, confirm done");
-    this.gameLogicFuncs.confirmDonePress();
+    this.setState({
+      confirmDonePressed: true
+    });
   };
   
   react = () => {
-    this.gameLogicFuncs.reactPress();
+    if(this.state.roundActive) {
+      let reactTime = new Date().getTime();
+      this.setState({
+        usrCount: this.state.usrCount + 1,
+        userReactTime: reactTime,
+        roundActive: false
+      });
+    }
   };
   
   selfCatch = () => {
-    console.log("arrow down, self catch");
-    this.clearCounts();
-    this.gameLogicFuncs.selfCatchPress();
+    this.setState({
+      selfCatchPressed: true
+    });
   };
-
-  clearCounts = () => {
-    this.setState({
-      gameCount: 0,
-      usrCount: 0
-    });
-  }
-
-  incGameCount = () => {
-    this.setState({
-      gameCount: this.state.gameCount + 1,
-      usrCount: this.state.usrCount
-    });
-  }
-
-  incUsrCount = () => {
-    this.setState({
-      gameCount: this.state.gameCount,
-      usrCount: this.state.usrCount + 1
-    });
-  }
 
   handleKeyPress = event => {
     if (event.key === "ArrowUp") this.confirmDone();
@@ -62,15 +109,24 @@ class Game extends Component {
     if (event.key === "ArrowDown") this.selfCatch();
   };
 
+  playRun = () => {
+    this.setState({
+      gameCount : this.state.gameCount + 1
+    })
+    this.startCycle();
+    setTimeout(this.stopCycle, ROUND_DURATION);
+  };
+
   componentDidMount() {
     document.addEventListener('keydown', this.handleKeyPress);
+    this.playRun();
   }
 
   render() {
     return(
       <div>
         <p>game count: {this.state.gameCount}</p>
-        <p>user count:  {this.state.usrCount}</p>
+        <p>user count: {this.state.usrCount}</p>
         <p>instructions</p>
         <p>right arrow goes to the next round</p>
         <p>down arrow self catches</p>
