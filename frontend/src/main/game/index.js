@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import { withRouter } from "react-router-dom";
 import './game.css';
 import playRoundSound  from './sounds/';
 
@@ -61,18 +62,22 @@ class Game extends Component {
     if(this.state.selfCatchPressed) {
       // self catch
       console.log("self catch")
+      this.props.history.push("/selfCatch");
     } else if (this.state.confirmDonePressed) {
       // confirm done
       if(this.state.gameCount === SUCCESS_TARGET) {
         // successful hit
         console.log("done hit!")
+        this.props.history.push("/hit");
       } else {
         // miss
-        console.log("done miss")
+        console.log("done miss");
+        this.props.history.push("/miss");
       }
     } else if (this.state.gameCount === GAME_CATCH_TARGET) {
       // game catch
       console.log("game catch");
+      this.props.history.push("/gameCatch");
     } else {
       // if no exit conditions, play run again
       this.playRun();
@@ -136,4 +141,4 @@ class Game extends Component {
   }
 }
 
-export default Game;
+export default withRouter(Game);
