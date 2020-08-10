@@ -24,6 +24,7 @@ class Game extends Component {
       selfCatchPressed: false,
       confirmDonePressed: false
     }
+    this.startGame = this.startGame.bind(this);
     this.playRun = this.playRun.bind(this);
     this.playSound = this.playSound.bind(this);
     this.startCycle = this.startCycle.bind(this);
@@ -34,10 +35,18 @@ class Game extends Component {
     this.handleKeyPress = this.handleKeyPress.bind(this);
   }
 
+  startGame = () => {
+    let gameStartTime = new Date().getTime();
+    this.setState({
+      gameStartTime : gameStartTime
+    })
+    this.playRun();
+  };
+
   playSound = () => {
     let soundTime = new Date().getTime();
     this.setState({
-      soundTime: soundTime
+      soundTime: soundTime - this.state.gameStartTime
     });
     playRoundSound();
   };
@@ -46,7 +55,7 @@ class Game extends Component {
     // start timers
     let cycleStartTime = new Date().getTime();
     this.setState({
-      cycleStartTime: cycleStartTime,
+      cycleStartTime: cycleStartTime - this.state.gameStartTime,
       roundActive: true
     });
     // play sound
@@ -54,6 +63,12 @@ class Game extends Component {
   };
 
   stopCycle = () => {
+    console.log({
+      soundTime: this.state.soundTime,
+      userReactTime: this.state.userReactTime,
+      cycleStartTime: this.state.cycleStartTime,
+      gameStartTime: this.state.gameStartTime
+    });
     // stop timers
     this.setState({
       roundActive: false
@@ -96,7 +111,7 @@ class Game extends Component {
       let reactTime = new Date().getTime();
       this.setState({
         usrCount: this.state.usrCount + 1,
-        userReactTime: reactTime,
+        userReactTime: reactTime - this.state.gameStartTime,
         roundActive: false
       });
     }
@@ -116,7 +131,10 @@ class Game extends Component {
 
   playRun = () => {
     this.setState({
-      gameCount : this.state.gameCount + 1
+      gameCount : this.state.gameCount + 1,
+      cycleStartTime : 0,
+      soundTime : 0,
+      userReactTime : 0,
     })
     this.startCycle();
     setTimeout(this.stopCycle, ROUND_DURATION);
@@ -124,7 +142,7 @@ class Game extends Component {
 
   componentDidMount() {
     document.addEventListener('keydown', this.handleKeyPress);
-    this.playRun();
+    this.startGame();
   }
 
   render() {
