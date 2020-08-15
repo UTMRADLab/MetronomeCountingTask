@@ -16,58 +16,58 @@ class Game extends Component {
 
       roundActive: false,
 
-      gameStartTime: 0,
       cycleStartTime: 0,
+      trialStartTime: 0,
       soundTime: 0,
       userReactTime: 0,
 
       selfCatchPressed: false,
       confirmDonePressed: false
     }
-    this.startGame = this.startGame.bind(this);
-    this.playRun = this.playRun.bind(this);
+    this.start = this.start.bind(this);
+    this.playTrial = this.playTrial.bind(this);
     this.playSound = this.playSound.bind(this);
-    this.startCycle = this.startCycle.bind(this);
-    this.stopCycle = this.stopCycle.bind(this);
+    this.startTrial = this.startTrial.bind(this);
+    this.stopTrial = this.stopTrial.bind(this);
     this.confirmDone = this.confirmDone.bind(this);
     this.react = this.react.bind(this);
     this.selfCatch = this.selfCatch.bind(this);
     this.handleKeyPress = this.handleKeyPress.bind(this);
   }
 
-  startGame = () => {
-    let gameStartTime = new Date().getTime();
+  start = () => {
+    let cycleStartTime = new Date().getTime();
     this.setState({
-      gameStartTime : gameStartTime
+      cycleStartTime : cycleStartTime
     })
-    this.playRun();
+    this.playTrial();
   };
 
   playSound = () => {
     let soundTime = new Date().getTime();
     this.setState({
-      soundTime: soundTime - this.state.gameStartTime
+      soundTime: soundTime - this.state.cycleStartTime
     });
     playRoundSound();
   };
 
-  startCycle = () => {
+  startTrial = () => {
     // start timers
-    let cycleStartTime = new Date().getTime();
+    let trialStartTime = new Date().getTime();
     this.setState({
-      cycleStartTime: cycleStartTime - this.state.gameStartTime,
+      trialStartTime: trialStartTime - this.state.cycleStartTime,
       roundActive: true
     });
     // play sound
     this.playSound();
   };
 
-  stopCycle = () => {
+  stopTrial = () => {
     console.log({
       soundTime: this.state.soundTime,
       userReactTime: this.state.userReactTime,
-      cycleStartTime: this.state.cycleStartTime,
-      gameStartTime: this.state.gameStartTime
+      trialStartTime: this.state.trialStartTime,
+      cycleStartTime: this.state.cycleStartTime
     });
     // stop timers
     this.setState({
@@ -95,7 +95,7 @@ class Game extends Component {
       this.props.history.push("/gameCatch");
     } else {
       // if no exit conditions, play run again
-      this.playRun();
+      this.playTrial();
     }
     
   };
@@ -111,7 +111,7 @@ class Game extends Component {
       let reactTime = new Date().getTime();
       this.setState({
         usrCount: this.state.usrCount + 1,
-        userReactTime: reactTime - this.state.gameStartTime,
+        userReactTime: reactTime - this.state.cycleStartTime,
         roundActive: false
       });
     }
@@ -129,27 +129,27 @@ class Game extends Component {
     if (event.key === "ArrowDown") this.selfCatch();
   };
 
-  playRun = () => {
+  playTrial = () => {
     this.setState({
       gameCount : this.state.gameCount + 1,
-      cycleStartTime : 0,
+      trialStartTime : 0,
       soundTime : 0,
       userReactTime : 0,
     })
-    this.startCycle();
-    setTimeout(this.stopCycle, ROUND_DURATION);
+    this.startTrial();
+    setTimeout(this.stopTrial, ROUND_DURATION);
   };
 
   componentDidMount() {
     document.addEventListener('keydown', this.handleKeyPress);
-    this.startGame();
+    this.start();
   }
 
   render() {
     return(
       <div>
-        <p>game count: {this.state.gameCount}</p>
-        <p>user count: {this.state.usrCount}</p>
+        <p>trial count for cycle: {this.state.gameCount}</p>
+        <p>user count for cycle: {this.state.usrCount}</p>
         <p>instructions</p>
         <p>right arrow goes to the next round</p>
         <p>down arrow self catches</p>
