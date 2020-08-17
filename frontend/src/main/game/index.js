@@ -2,6 +2,9 @@ import React, {Component} from 'react';
 import { withRouter } from "react-router-dom";
 import './game.css';
 import playRoundSound  from './sounds/';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { setCycleStartTime } from 'actions/timeActions';
 
 const SUCCESS_TARGET = 20;
 const GAME_CATCH_TARGET = 30;
@@ -37,16 +40,14 @@ class Game extends Component {
 
   start = () => {
     let cycleStartTime = new Date().getTime();
-    this.setState({
-      cycleStartTime : cycleStartTime
-    })
+    this.props.setCycleStartTime(cycleStartTime);
     this.playTrial();
   };
 
   playSound = () => {
     let soundTime = new Date().getTime();
     this.setState({
-      soundTime: soundTime - this.state.cycleStartTime
+      soundTime: soundTime - this.props.time.cycleStartTime
     });
     playRoundSound();
   };
@@ -54,8 +55,9 @@ class Game extends Component {
   startTrial = () => {
     // start timers
     let trialStartTime = new Date().getTime();
+    console.log(this.props)
     this.setState({
-      trialStartTime: trialStartTime - this.state.cycleStartTime,
+      trialStartTime: trialStartTime - this.props.time.cycleStartTime,
       roundActive: true
     });
     // play sound
@@ -67,7 +69,7 @@ class Game extends Component {
       soundTime: this.state.soundTime,
       userReactTime: this.state.userReactTime,
       trialStartTime: this.state.trialStartTime,
-      cycleStartTime: this.state.cycleStartTime
+      cycleStartTime: this.props.time.cycleStartTime
     });
     // stop timers
     this.setState({
@@ -111,7 +113,7 @@ class Game extends Component {
       let reactTime = new Date().getTime();
       this.setState({
         usrCount: this.state.usrCount + 1,
-        userReactTime: reactTime - this.state.cycleStartTime,
+        userReactTime: reactTime - this.props.time.cycleStartTime,
         roundActive: false
       });
     }
@@ -159,4 +161,16 @@ class Game extends Component {
   }
 }
 
-export default withRouter(Game);
+Game.propTypes = {
+  setCycleStartTime: PropTypes.func,
+  cycleStartTime: PropTypes.number,
+  trialStartTime: PropTypes.number
+};
+
+const mapStateToProps = state => ({
+  time: state.time
+});
+
+const gameWithRouter = withRouter(Game)
+const gameWithRouterAndRedux = connect(mapStateToProps, { setCycleStartTime })(gameWithRouter);
+export default gameWithRouterAndRedux;
