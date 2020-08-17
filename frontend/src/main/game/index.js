@@ -10,7 +10,11 @@ import {
   setSoundTime,
   setUserReactTime,
   setRoundActiveTrue,
-  setRoundActiveFalse
+  setRoundActiveFalse,
+  setSelfCatchPressedTrue,
+  setSelfCatchPressedFalse,
+  setConfirmDonePressedTrue,
+  setConfirmDonePressedFalse
 } from 'actions/gameActions';
 
 const SUCCESS_TARGET = 20;
@@ -23,9 +27,6 @@ class Game extends Component {
     this.state = {
       gameCount: -1,
       usrCount: 0,
-
-      selfCatchPressed: false,
-      confirmDonePressed: false
     }
     this.start = this.start.bind(this);
     this.playTrial = this.playTrial.bind(this);
@@ -69,11 +70,11 @@ class Game extends Component {
     // stop timers
     this.props.setRoundActiveFalse();
     // check for any exit conditions
-    if(this.state.selfCatchPressed) {
+    if(this.props.game.selfCatchPressed) {
       // self catch
       console.log("self catch")
       this.props.history.push("/selfCatch");
-    } else if (this.state.confirmDonePressed) {
+    } else if (this.props.game.confirmDonePressed) {
       // confirm done
       if(this.state.gameCount === SUCCESS_TARGET) {
         // successful hit
@@ -96,9 +97,7 @@ class Game extends Component {
   };
 
   confirmDone = () => {
-    this.setState({
-      confirmDonePressed: true
-    });
+    this.props.setConfirmDonePressedTrue();
   };
   
   react = () => {
@@ -113,9 +112,7 @@ class Game extends Component {
   };
   
   selfCatch = () => {
-    this.setState({
-      selfCatchPressed: true
-    });
+    this.props.setConfirmDonePressedTrue();
   };
 
   handleKeyPress = event => {
@@ -170,6 +167,10 @@ const gameWithRouterAndRedux = connect(mapStateToProps, {
   setSoundTime,
   setUserReactTime,
   setRoundActiveTrue,
-  setRoundActiveFalse
+  setRoundActiveFalse,
+  setSelfCatchPressedTrue,
+  setSelfCatchPressedFalse,
+  setConfirmDonePressedTrue,
+  setConfirmDonePressedFalse
 })(gameWithRouter);
 export default gameWithRouterAndRedux;
