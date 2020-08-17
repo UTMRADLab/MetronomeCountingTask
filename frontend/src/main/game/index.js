@@ -8,7 +8,9 @@ import {
   setCycleStartTime,
   setTrialStartTime,
   setSoundTime,
-  setUserReactTime
+  setUserReactTime,
+  setRoundActiveTrue,
+  setRoundActiveFalse
 } from 'actions/gameActions';
 
 const SUCCESS_TARGET = 20;
@@ -21,8 +23,6 @@ class Game extends Component {
     this.state = {
       gameCount: -1,
       usrCount: 0,
-
-      roundActive: false,
 
       selfCatchPressed: false,
       confirmDonePressed: false
@@ -54,9 +54,7 @@ class Game extends Component {
     // start timers
     let trialStartTime = new Date().getTime();
     this.props.setTrialStartTime(trialStartTime);
-    this.setState({
-      roundActive: true
-    });
+    this.props.setRoundActiveTrue();
     // play sound
     this.playSound();
   };
@@ -69,9 +67,7 @@ class Game extends Component {
       cycleStartTime: this.props.game.cycleStartTime
     });
     // stop timers
-    this.setState({
-      roundActive: false
-    });
+    this.props.setRoundActiveFalse();
     // check for any exit conditions
     if(this.state.selfCatchPressed) {
       // self catch
@@ -106,12 +102,12 @@ class Game extends Component {
   };
   
   react = () => {
-    if(this.state.roundActive) {
+    if(this.props.game.roundActive) {
       let reactTime = new Date().getTime();
       this.props.setUserReactTime(reactTime);
+      this.props.setRoundActiveFalse();
       this.setState({
         usrCount: this.state.usrCount + 1,
-        roundActive: false
       });
     }
   };
@@ -172,6 +168,8 @@ const gameWithRouterAndRedux = connect(mapStateToProps, {
   setCycleStartTime,
   setTrialStartTime,
   setSoundTime,
-  setUserReactTime
+  setUserReactTime,
+  setRoundActiveTrue,
+  setRoundActiveFalse
 })(gameWithRouter);
 export default gameWithRouterAndRedux;

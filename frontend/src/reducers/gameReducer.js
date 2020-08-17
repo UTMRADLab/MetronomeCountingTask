@@ -2,12 +2,16 @@ import {
   SET_CYCLE_START_TIME,
   SET_TRIAL_START_TIME,
   SET_SOUND_TIME,
-  SET_USER_REACT_TIME
+  SET_USER_REACT_TIME,
+  SET_ROUND_ACTIVE_TRUE,
+  SET_ROUND_ACTIVE_FALSE
 } from 'actions/types';
 
 const initialState = {
   cycleStartTime: 0,
-  trialStartTime: 0
+  trialStartTime: 0,
+  soundTime: 0,
+  userReactTime: 0
 };
 
 export default (state = initialState, action) => {
@@ -31,6 +35,16 @@ export default (state = initialState, action) => {
       return {
         ...state,
         userReactTime: action.userReactTime
+      }
+    case SET_ROUND_ACTIVE_TRUE:
+      return {
+        ...state,
+        roundActive: action.bool
+      }
+    case SET_ROUND_ACTIVE_FALSE:
+      return {
+        ...state,
+        roundActive: action.bool
       }
     default:
       return state

@@ -2,7 +2,9 @@ import {
   SET_CYCLE_START_TIME,
   SET_TRIAL_START_TIME,
   SET_SOUND_TIME,
-  SET_USER_REACT_TIME
+  SET_USER_REACT_TIME,
+  SET_ROUND_ACTIVE_TRUE,
+  SET_ROUND_ACTIVE_FALSE
 } from './types';
 
 export const setCycleStartTime = time => dispatch => {
@@ -32,3 +34,17 @@ export const setUserReactTime = time => dispatch => {
     userReactTime: time
   })
 };
+
+export const setRoundActiveTrue = () => dispatch => {
+  dispatch({
+    type: SET_ROUND_ACTIVE_TRUE,
+    bool: true
+  })
+};
+
+export const setRoundActiveFalse = () => dispatch => {
+  dispatch({
+    type: SET_ROUND_ACTIVE_FALSE,
+    bool: false
+  })
+}
