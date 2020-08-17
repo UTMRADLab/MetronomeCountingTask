@@ -1,4 +1,9 @@
-import { SET_CYCLE_START_TIME, SET_TRIAL_START_TIME } from 'actions/types';
+import {
+  SET_CYCLE_START_TIME,
+  SET_TRIAL_START_TIME,
+  SET_SOUND_TIME,
+  SET_USER_REACT_TIME
+} from 'actions/types';
 
 const initialState = {
   cycleStartTime: 0,
@@ -16,6 +21,16 @@ export default (state = initialState, action) => {
       return {
         ...state,
         trialStartTime: action.trialStartTime
+      }
+    case SET_SOUND_TIME:
+      return {
+        ...state,
+        soundTime: action.soundTime
+      }
+    case SET_USER_REACT_TIME:
+      return {
+        ...state,
+        userReactTime: action.userReactTime
       }
     default:
       return state

@@ -1,7 +1,7 @@
   
 import { combineReducers } from 'redux';
-import timeReducer from './timeReducer';
+import gameReducer from './gameReducer';
 
 export default combineReducers({
-  time: timeReducer
+  game: gameReducer
 });

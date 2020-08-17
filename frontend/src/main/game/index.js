@@ -4,7 +4,12 @@ import './game.css';
 import playRoundSound  from './sounds/';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { setCycleStartTime } from 'actions/timeActions';
+import {
+  setCycleStartTime,
+  setTrialStartTime,
+  setSoundTime,
+  setUserReactTime
+} from 'actions/gameActions';
 
 const SUCCESS_TARGET = 20;
 const GAME_CATCH_TARGET = 30;
@@ -18,11 +23,6 @@ class Game extends Component {
       usrCount: 0,
 
       roundActive: false,
-
-      cycleStartTime: 0,
-      trialStartTime: 0,
-      soundTime: 0,
-      userReactTime: 0,
 
       selfCatchPressed: false,
       confirmDonePressed: false
@@ -46,18 +46,15 @@ class Game extends Component {
 
   playSound = () => {
     let soundTime = new Date().getTime();
-    this.setState({
-      soundTime: soundTime - this.props.time.cycleStartTime
-    });
+    this.props.setSoundTime(soundTime);
     playRoundSound();
   };
 
   startTrial = () => {
     // start timers
     let trialStartTime = new Date().getTime();
-    console.log(this.props)
+    this.props.setTrialStartTime(trialStartTime);
     this.setState({
-      trialStartTime: trialStartTime - this.props.time.cycleStartTime,
       roundActive: true
     });
     // play sound
@@ -66,10 +63,10 @@ class Game extends Component {
 
   stopTrial = () => {
     console.log({
-      soundTime: this.state.soundTime,
-      userReactTime: this.state.userReactTime,
-      trialStartTime: this.state.trialStartTime,
-      cycleStartTime: this.props.time.cycleStartTime
+      soundTime: this.props.game.soundTime,
+      userReactTime: this.props.game.userReactTime,
+      trialStartTime: this.props.game.trialStartTime,
+      cycleStartTime: this.props.game.cycleStartTime
     });
     // stop timers
     this.setState({
@@ -111,9 +108,9 @@ class Game extends Component {
   react = () => {
     if(this.state.roundActive) {
       let reactTime = new Date().getTime();
+      this.props.setUserReactTime(reactTime);
       this.setState({
         usrCount: this.state.usrCount + 1,
-        userReactTime: reactTime - this.props.time.cycleStartTime,
         roundActive: false
       });
     }
@@ -132,11 +129,10 @@ class Game extends Component {
   };
 
   playTrial = () => {
+    this.props.setTrialStartTime(0);
+    this.props.setUserReactTime(0);
     this.setState({
       gameCount : this.state.gameCount + 1,
-      trialStartTime : 0,
-      soundTime : 0,
-      userReactTime : 0,
     })
     this.startTrial();
     setTimeout(this.stopTrial, ROUND_DURATION);
@@ -168,9 +164,14 @@ Game.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  time: state.time
+  game: state.game
 });
 
 const gameWithRouter = withRouter(Game)
-const gameWithRouterAndRedux = connect(mapStateToProps, { setCycleStartTime })(gameWithRouter);
+const gameWithRouterAndRedux = connect(mapStateToProps, {
+  setCycleStartTime,
+  setTrialStartTime,
+  setSoundTime,
+  setUserReactTime
+})(gameWithRouter);
 export default gameWithRouterAndRedux;
