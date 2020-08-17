@@ -1,3 +1,4 @@
+import store from 'store';
 import {
   SET_CYCLE_START_TIME,
   SET_TRIAL_START_TIME,
@@ -8,7 +9,9 @@ import {
   SET_SELF_CATCH_PRESSED_TRUE,
   SET_SELF_CATCH_PRESSED_FALSE,
   SET_CONFIRM_DONE_PRESSED_TRUE,
-  SET_CONFIRM_DONE_PRESSED_FALSE
+  SET_CONFIRM_DONE_PRESSED_FALSE,
+  INC_GAME_COUNT,
+  INC_USER_COUNT
 } from './types';
 
 export const setCycleStartTime = time => dispatch => {
@@ -80,3 +83,17 @@ export const setConfirmDonePressedFalse = () => dispatch => {
     bool: false
   })
 }
+
+export const incGameCount = () => dispatch => {
+  dispatch({
+    type: INC_GAME_COUNT,
+    payload: store.getState().game.gameCount+1
+  })
+};
+
+export const incUserCount = () => dispatch => {
+  dispatch({
+    type: INC_USER_COUNT,
+    payload: store.getState().game.usrCount+1
+  })
+};

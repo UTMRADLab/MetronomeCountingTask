@@ -14,7 +14,9 @@ import {
   setSelfCatchPressedTrue,
   setSelfCatchPressedFalse,
   setConfirmDonePressedTrue,
-  setConfirmDonePressedFalse
+  setConfirmDonePressedFalse,
+  incGameCount,
+  incUserCount
 } from 'actions/gameActions';
 
 const SUCCESS_TARGET = 20;
@@ -24,10 +26,6 @@ const ROUND_DURATION = 1000;
 class Game extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      gameCount: -1,
-      usrCount: 0,
-    }
     this.start = this.start.bind(this);
     this.playTrial = this.playTrial.bind(this);
     this.playSound = this.playSound.bind(this);
@@ -76,7 +74,7 @@ class Game extends Component {
       this.props.history.push("/selfCatch");
     } else if (this.props.game.confirmDonePressed) {
       // confirm done
-      if(this.state.gameCount === SUCCESS_TARGET) {
+      if(this.props.game.gameCount === SUCCESS_TARGET) {
         // successful hit
         console.log("done hit!")
         this.props.history.push("/hit");
@@ -85,7 +83,7 @@ class Game extends Component {
         console.log("done miss");
         this.props.history.push("/miss");
       }
-    } else if (this.state.gameCount === GAME_CATCH_TARGET) {
+    } else if (this.props.game.gameCount === GAME_CATCH_TARGET) {
       // game catch
       console.log("game catch");
       this.props.history.push("/gameCatch");
@@ -105,9 +103,7 @@ class Game extends Component {
       let reactTime = new Date().getTime();
       this.props.setUserReactTime(reactTime);
       this.props.setRoundActiveFalse();
-      this.setState({
-        usrCount: this.state.usrCount + 1,
-      });
+      this.props.incUserCount();
     }
   };
   
@@ -124,9 +120,7 @@ class Game extends Component {
   playTrial = () => {
     this.props.setTrialStartTime(0);
     this.props.setUserReactTime(0);
-    this.setState({
-      gameCount : this.state.gameCount + 1,
-    })
+    this.props.incGameCount();
     this.startTrial();
     setTimeout(this.stopTrial, ROUND_DURATION);
   };
@@ -139,8 +133,8 @@ class Game extends Component {
   render() {
     return(
       <div>
-        <p>trial count for cycle: {this.state.gameCount}</p>
-        <p>user count for cycle: {this.state.usrCount}</p>
+        <p>trial count for cycle: {this.props.game.gameCount}</p>
+        <p>user count for cycle: {this.props.game.usrCount}</p>
         <p>instructions</p>
         <p>right arrow goes to the next round</p>
         <p>down arrow self catches</p>
@@ -171,6 +165,8 @@ const gameWithRouterAndRedux = connect(mapStateToProps, {
   setSelfCatchPressedTrue,
   setSelfCatchPressedFalse,
   setConfirmDonePressedTrue,
-  setConfirmDonePressedFalse
+  setConfirmDonePressedFalse,
+  incGameCount,
+  incUserCount
 })(gameWithRouter);
 export default gameWithRouterAndRedux;

@@ -8,7 +8,9 @@ import {
   SET_SELF_CATCH_PRESSED_TRUE,
   SET_SELF_CATCH_PRESSED_FALSE,
   SET_CONFIRM_DONE_PRESSED_TRUE,
-  SET_CONFIRM_DONE_PRESSED_FALSE
+  SET_CONFIRM_DONE_PRESSED_FALSE,
+  INC_GAME_COUNT,
+  INC_USER_COUNT
 } from 'actions/types';
 
 const initialState = {
@@ -17,7 +19,9 @@ const initialState = {
   soundTime: 0,
   userReactTime: 0,
   selfCatchPressed: false,
-  confirmDonePressed: false
+  confirmDonePressed: false,
+  gameCount: -1,
+  usrCount: 0
 };
 
 export default (state = initialState, action) => {
@@ -72,6 +76,16 @@ export default (state = initialState, action) => {
         ...state,
         confirmDonePressed: action.bool
       }
+    case INC_GAME_COUNT:
+      return {
+        ...state,
+        gameCount: action.payload
+      };
+    case INC_USER_COUNT:
+      return {
+        ...state,
+        usrCount: action.payload
+      };
     default:
       return state
   }
