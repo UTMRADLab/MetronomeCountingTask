@@ -10,7 +10,9 @@ import {
   SET_CONFIRM_DONE_PRESSED_TRUE,
   SET_CONFIRM_DONE_PRESSED_FALSE,
   INC_GAME_COUNT,
-  INC_USER_COUNT
+  INC_USER_COUNT,
+  RESET_GAME_COUNT,
+  RESET_USER_COUNT
 } from 'actions/types';
 
 const initialState = {
@@ -86,6 +88,16 @@ export default (state = initialState, action) => {
         ...state,
         usrCount: action.payload
       };
+    case RESET_GAME_COUNT:
+      return {
+        ...state,
+        gameCount: 0
+      }
+    case RESET_USER_COUNT:
+      return {
+        ...state,
+        usrCount: 0
+      }
     default:
       return state
   }

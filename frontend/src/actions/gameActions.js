@@ -11,7 +11,9 @@ import {
   SET_CONFIRM_DONE_PRESSED_TRUE,
   SET_CONFIRM_DONE_PRESSED_FALSE,
   INC_GAME_COUNT,
-  INC_USER_COUNT
+  INC_USER_COUNT,
+  RESET_USER_COUNT,
+  RESET_GAME_COUNT
 } from './types';
 
 export const setCycleStartTime = time => dispatch => {
@@ -97,3 +99,15 @@ export const incUserCount = () => dispatch => {
     payload: store.getState().game.usrCount+1
   })
 };
+
+export const resetGameCount = () => dispatch => {
+  dispatch({
+    type: RESET_GAME_COUNT
+  })
+}
+
+export const resetUserCount = () => dispatch => {
+  dispatch({
+    type: RESET_USER_COUNT
+  })
+}

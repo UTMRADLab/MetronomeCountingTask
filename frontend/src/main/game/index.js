@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import { withRouter } from "react-router-dom";
 import './game.css';
 import playRoundSound  from './sounds/';
-import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {
   setCycleStartTime,
@@ -16,8 +15,13 @@ import {
   setConfirmDonePressedTrue,
   setConfirmDonePressedFalse,
   incGameCount,
-  incUserCount
+  incUserCount,
+  resetGameCount,
+  resetUserCount
 } from 'actions/gameActions';
+import {
+  stopBlockTimer
+} from 'actions/counterActions';
 
 const SUCCESS_TARGET = 20;
 const GAME_CATCH_TARGET = 30;
@@ -40,6 +44,8 @@ class Game extends Component {
   start = () => {
     let cycleStartTime = new Date().getTime();
     this.props.setCycleStartTime(cycleStartTime);
+    this.props.resetGameCount();
+    this.props.resetUserCount();
     this.playTrial();
   };
 
@@ -144,29 +150,36 @@ class Game extends Component {
   }
 }
 
-Game.propTypes = {
-  setCycleStartTime: PropTypes.func,
-  cycleStartTime: PropTypes.number,
-  trialStartTime: PropTypes.number
-};
-
-const mapStateToProps = state => ({
+const mapStateToPropsGame = state => ({
   game: state.game
 });
 
+const mapStateToPropsCounter = state => ({
+  counter: state.counter
+});
+
 const gameWithRouter = withRouter(Game)
-const gameWithRouterAndRedux = connect(mapStateToProps, {
-  setCycleStartTime,
-  setTrialStartTime,
-  setSoundTime,
-  setUserReactTime,
-  setRoundActiveTrue,
-  setRoundActiveFalse,
-  setSelfCatchPressedTrue,
-  setSelfCatchPressedFalse,
-  setConfirmDonePressedTrue,
-  setConfirmDonePressedFalse,
-  incGameCount,
-  incUserCount
-})(gameWithRouter);
-export default gameWithRouterAndRedux;
+const gameWithRouterAndGameRedux = connect(
+  mapStateToPropsGame,
+  {
+    setCycleStartTime,
+    setTrialStartTime,
+    setSoundTime,
+    setUserReactTime,
+    setRoundActiveTrue,
+    setRoundActiveFalse,
+    setSelfCatchPressedTrue,
+    setSelfCatchPressedFalse,
+    setConfirmDonePressedTrue,
+    setConfirmDonePressedFalse,
+    incGameCount,
+    incUserCount,
+    resetGameCount,
+    resetUserCount
+  })(gameWithRouter);
+const gameWithEverything = connect(
+  mapStateToPropsCounter,
+  {
+    stopBlockTimer
+  })(gameWithRouterAndGameRedux);
+export default gameWithEverything;
