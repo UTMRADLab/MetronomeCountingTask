@@ -1,22 +1,10 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 import Countdown from 'react-countdown';
-
-const renderer = ({ hours, minutes, seconds, completed }) => {
-  if (completed) {
-    return (
-      <p>
-        <Link to="/game">Return to Game</Link>
-      </p>
-    );
-  } else {
-    return (
-      <p>
-        {minutes} minutes {seconds} seconds
-      </p>
-    );
-  }
-};
+import { connect } from 'react-redux';
+import {
+  decBreakCount
+} from 'actions/breakActions';
+import { withRouter } from "react-router-dom";
 
 class Break extends Component {
   constructor(props) {
@@ -24,10 +12,35 @@ class Break extends Component {
     this.state = {
       minutes: 2
     };
+    this.renderer = this.renderer.bind(this);
+    this.returnToGame = this.returnToGame.bind(this);
+  };
+
+  returnToGame = () => {
+    this.props.decBreakCount();
+    this.props.history.push("/game")
+  };
+
+  renderer = ({ hours, minutes, seconds, completed }) => {
+    if (completed) {
+      return (
+        <p>
+          <button onClick={this.returnToGame}>
+            Return to Game
+          </button>
+        </p>
+      );
+    } else {
+      return (
+        <p>
+          {minutes} minutes {seconds} seconds
+        </p>
+      );
+    }
   };
 
   render() {
-    const minutesInMilliseconds = this.state.minutes * 60 * 1000;
+    const minutesInMilliseconds = this.props.break.breakMinuteDuration * 60 * 1000;
     const completionDate = Date.now() + minutesInMilliseconds;
 
     return(
@@ -41,11 +54,22 @@ class Break extends Component {
         <div>
           <Countdown
             date={completionDate}
-            renderer={renderer} />
+            renderer={this.renderer} />
         </div>
       </div>
     );
   }
 }
 
-export default Break;
+const mapStateToPropsBreak = state => ({
+  break: state.break
+});
+
+const BreakWithRedux = connect(
+  mapStateToPropsBreak,
+  {
+    decBreakCount
+  }
+)(Break);
+
+export default withRouter(BreakWithRedux);

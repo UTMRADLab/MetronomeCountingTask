@@ -21,3 +21,5 @@ export const TICK_BLOCK_TIMER = 'TICK_BLOCK_TIMER'
 export const STOP_BLOCK_TIMER = 'STOP_BLOCK_TIMER';
 
 export const STORE_ID = 'STORE_ID';
+
+export const DEC_BREAK_COUNT = 'DEC_BREAK_COUNT';

@@ -1,4 +1,4 @@
-import store from 'store';
+import store from '../store';
 import {
   SET_CYCLE_START_TIME,
   SET_TRIAL_START_TIME,
