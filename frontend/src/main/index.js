@@ -7,6 +7,7 @@ import Miss from './miss';
 import Hit from './hit';
 import SelfCatch from './selfCatch';
 import GameCatch from './gameCatch';
+import Break from './break';
 
 class Main extends Component {
   render() {
@@ -19,6 +20,7 @@ class Main extends Component {
         <Route path="/hit" component={Hit} />
         <Route path="/selfCatch" component={SelfCatch} />
         <Route path="/gameCatch" component={GameCatch} />
+        <Route path="/break" component={Break} />
       </Switch>
     );
   }
