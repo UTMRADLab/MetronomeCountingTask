@@ -20,7 +20,7 @@ The project has a front end portion, which houses all of the UI and game logic. 
 ## TODO
 - [ ] Data Collection
 	- [ ] Send Requests to Backend after every Trial
-	- [ ] Fix Infinite Blocks Bug (Blocks only last 10 minutes and go to a 2 minute break, after 3 Blocks, the experiment should end and a qualtrics link should be given)
+	- [ ] Fix Infinite Blocks Bug (Blocks should only last 10 minutes and go to a 2 minute break, after 3 Blocks, the experiment should end and a qualtrics link should be given)
 - [ ] Deployment
 	- [ ] Deploy Frontend
 	- [ ] Deploy Backend
